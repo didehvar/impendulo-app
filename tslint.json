@@ -8,6 +8,15 @@
     ]
   },
   "rules": {
-    "member-access": [true, "no-public"]
+    "member-access": [true, "no-public"],
+    "ordered-imports": [
+      true,
+      {
+        "import-sources-order": "case-insensitive",
+        "grouped-imports": true,
+        "named-imports-order": "case-insensitive",
+        "module-source-path": "full"
+      }
+    ]
   }
 }

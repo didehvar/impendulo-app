@@ -1,4 +1,6 @@
+import { AnchorButton } from '@blueprintjs/core';
 import * as React from 'react';
+
 import styles from './App.module.scss';
 import logo from './logo.svg';
 
@@ -17,14 +19,13 @@ class App extends React.Component {
           <p>
             Edit <code>src/App.tsx</code> and save to reload.
           </p>
-          <a
-            className={styles.link}
+          <AnchorButton
             href="https://reactjs.org"
             target="_blank"
             rel="noopener noreferrer"
           >
             Learn React
-          </a>
+          </AnchorButton>
         </header>
       </div>
     );
