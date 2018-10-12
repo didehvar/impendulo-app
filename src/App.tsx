@@ -1,9 +1,15 @@
 import * as React from 'react';
-import * as styles from './App.css';
+import styles from './App.module.scss';
 import logo from './logo.svg';
 
 class App extends React.Component {
-  public render() {
+  componentDidMount() {
+    window.Intercom('boot', {
+      app_id: process.env.REACT_APP_INTERCOM_ID,
+    });
+  }
+
+  render() {
     return (
       <div className={styles.app}>
         <header className={styles.header}>
@@ -26,4 +32,3 @@ class App extends React.Component {
 }
 
 export default App;
-
