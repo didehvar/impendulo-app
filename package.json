@@ -1,6 +1,6 @@
 {
-  "name": "app-ts",
-  "version": "0.1.0",
+  "name": "impendulo-app",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "start": "react-scripts-ts start",
