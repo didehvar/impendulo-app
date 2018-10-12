@@ -1,3 +1,4 @@
+import 'auth0-js/build/auth0';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 

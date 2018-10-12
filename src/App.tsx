@@ -1,8 +1,7 @@
-import { AnchorButton } from '@blueprintjs/core';
 import * as React from 'react';
 
 import styles from './App.module.scss';
-import logo from './logo.svg';
+import Auth from './Auth';
 
 class App extends React.Component {
   componentDidMount() {
@@ -14,19 +13,7 @@ class App extends React.Component {
   render() {
     return (
       <div className={styles.app}>
-        <header className={styles.header}>
-          <img src={logo} className={styles.logo} alt="logo" />
-          <p>
-            Edit <code>src/App.tsx</code> and save to reload.
-          </p>
-          <AnchorButton
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </AnchorButton>
-        </header>
+        <Auth />
       </div>
     );
   }
