@@ -1,4 +1,3 @@
-import { Button } from '@blueprintjs/core';
 import * as auth0 from 'auth0-js';
 import * as React from 'react';
 
@@ -16,7 +15,11 @@ class Auth extends React.PureComponent<object, object> {
   };
 
   render() {
-    return <Button onClick={this.handleLogin}>Log in</Button>;
+    return (
+      <a href="#" onClick={this.handleLogin}>
+        Log in
+      </a>
+    );
   }
 }
 

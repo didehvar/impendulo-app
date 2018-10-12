@@ -1,4 +1,7 @@
-$brand-primary: #9167db;
+@charset 'utf-8';
 
-@import '~normalize.css/normalize.css';
-@import '~@blueprintjs/core/src/blueprint.scss';
+$purple: #9167db;
+$primary: $purple;
+
+@import '~bulma/sass/utilities/_all.sass';
+@import '~bulma/sass/base/_all.sass';

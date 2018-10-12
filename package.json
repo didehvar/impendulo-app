@@ -18,10 +18,9 @@
     "not op_mini all"
   ],
   "dependencies": {
-    "@blueprintjs/core": "^3.7.0",
     "auth0-js": "^9.8.0",
+    "bulma": "^0.7.2",
     "node-sass": "^4.9.3",
-    "normalize.css": "^8.0.0",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-scripts-ts": "4.0.8"
