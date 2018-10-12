@@ -1,7 +1,9 @@
 import * as React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import styles from './App.module.scss';
+// import styles from './App.module.scss';
 import Auth from './Auth';
+import Home from './pages/Home';
 
 class App extends React.Component {
   componentDidMount() {
@@ -12,9 +14,12 @@ class App extends React.Component {
 
   render() {
     return (
-      <div className={styles.app}>
-        <Auth />
-      </div>
+      <Router>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route path="/auth" component={Auth} />
+        </Switch>
+      </Router>
     );
   }
 }

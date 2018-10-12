@@ -8,6 +8,8 @@
     ]
   },
   "rules": {
+    "no-empty-interface": false,
+    "jsx-boolean-value": false,
     "member-access": [true, "no-public"],
     "ordered-imports": [
       true,
