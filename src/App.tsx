@@ -1,9 +1,8 @@
 import * as React from 'react';
-import { Route, Router, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import Auth0 from './components/Auth0';
 import Intercom from './components/Intercom';
-import history from './history';
 import Auth from './pages/Auth';
 import AuthCallback from './pages/AuthCallback';
 import Home from './pages/Home';
@@ -11,7 +10,7 @@ import Home from './pages/Home';
 class App extends React.Component {
   render() {
     return (
-      <Router history={history}>
+      <Router>
         <>
           <Auth0>
             {({ authenticated, user }) => {

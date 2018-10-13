@@ -10,15 +10,6 @@ import './index.scss';
 import App from './App';
 
 const client = new ApolloClient({
-  clientState: {
-    defaults: {
-      authenticated: false,
-      user: {
-        __typename: 'User',
-      },
-    },
-    resolvers: {},
-  },
   request: async operation => {
     const token = localStorage.getItem('token');
     operation.setContext({
@@ -27,7 +18,7 @@ const client = new ApolloClient({
       },
     });
   },
-  // uri: process.env.REACT_APP_HASURA_URL,
+  uri: process.env.REACT_APP_HASURA_URL,
 });
 
 ReactDOM.render(

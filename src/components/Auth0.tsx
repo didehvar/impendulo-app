@@ -1,10 +1,8 @@
 import * as auth0 from 'auth0-js';
+import { History } from 'history';
 import * as jwtDecode from 'jwt-decode';
-// import flowRight from 'lodash/flowRight';
 import * as React from 'react';
 import { withApollo, WithApolloClient } from 'react-apollo';
-
-import history from '../history';
 
 export interface User {
   email: string;
@@ -31,7 +29,7 @@ interface Children {
 }
 
 interface AuthProps {
-  callback?: boolean;
+  history?: History;
   children: (auth: Children) => React.ReactNode;
 }
 
@@ -42,10 +40,6 @@ interface State {
 }
 
 class Auth0 extends React.Component<Props, State> {
-  static defaultProps: Partial<Props> = {
-    callback: false,
-  };
-
   static auth = new auth0.WebAuth({
     clientID: 'z0s516CNpJGqe0qz9Giz5CLbb0pKoVy4',
     domain: 'impendulo-auth.eu.auth0.com',
@@ -57,8 +51,10 @@ class Auth0 extends React.Component<Props, State> {
   state: State = {};
 
   componentDidMount() {
-    if (this.props.callback) {
-      this.handleCallback();
+    const { history } = this.props;
+
+    if (history) {
+      this.handleCallback(history);
     }
   }
 
@@ -104,7 +100,7 @@ class Auth0 extends React.Component<Props, State> {
     );
   };
 
-  handleCallback = () => {
+  handleCallback = (history: History) => {
     this.setState({ error: undefined });
 
     Auth0.auth.parseHash((err: auth0.Auth0Error, hash) => {
@@ -122,15 +118,6 @@ class Auth0 extends React.Component<Props, State> {
         JSON.stringify(expiresIn! * 1000 + new Date().getTime()),
       );
 
-      // tslint:disable-next-line
-      console.log(
-        'expiresIn',
-        expiresIn,
-        'at',
-        new Date().getTime(),
-        'calc',
-        expiresIn! * 1000 + new Date().getTime(),
-      );
       history.replace('/');
     });
   };
@@ -147,10 +134,5 @@ class Auth0 extends React.Component<Props, State> {
     });
   }
 }
-
-// export default flowRight<Auth0, React.Component, Promise<ExecutionResult>>(
-//   withApollo,
-//   graphql<{}>(AUTH_QUERY),
-// )(Auth0);
 
 export default withApollo(Auth0);

@@ -1,14 +1,19 @@
+import { History } from 'history';
 import * as React from 'react';
 
 import Auth0 from 'src/components/Auth0';
 import Spinner from 'src/components/Spinner';
 
-interface Props {}
+interface Props {
+  history: History;
+}
 
 class AuthCallback extends React.PureComponent<Props, object> {
   render() {
+    const { history } = this.props;
+
     return (
-      <Auth0 callback>
+      <Auth0 history={history}>
         {({ error }) => {
           return (
             <>
