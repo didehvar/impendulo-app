@@ -1,8 +1,9 @@
 import * as React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { Route, Router, Switch } from 'react-router-dom';
 
-// import styles from './App.module.scss';
-import Auth from './Auth';
+import history from './history';
+import Auth from './pages/Auth';
+import AuthCallback from './pages/AuthCallback';
 import Home from './pages/Home';
 
 class App extends React.Component {
@@ -14,10 +15,11 @@ class App extends React.Component {
 
   render() {
     return (
-      <Router>
+      <Router history={history}>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route path="/auth" component={Auth} />
+          <Route exact path="/auth" component={Auth} />
+          <Route exact path="/auth/callback" component={AuthCallback} />
         </Switch>
       </Router>
     );

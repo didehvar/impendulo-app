@@ -14,9 +14,9 @@
     "ordered-imports": [
       true,
       {
-        "import-sources-order": "case-insensitive",
+        "import-sources-order": "lowercase-first",
         "grouped-imports": true,
-        "named-imports-order": "case-insensitive",
+        "named-imports-order": "lowercase-first",
         "module-source-path": "full"
       }
     ]
