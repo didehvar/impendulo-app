@@ -2,9 +2,9 @@ import * as React from 'react';
 
 import Auth0 from './Auth0';
 
-interface IAuthLinkProps {}
+interface Props {}
 
-class AuthLink extends React.PureComponent<IAuthLinkProps, object> {
+class AuthLink extends React.PureComponent<Props, object> {
   render() {
     return (
       <Auth0>

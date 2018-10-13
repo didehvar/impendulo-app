@@ -1,9 +1,20 @@
 import * as auth0 from 'auth0-js';
+import * as jwtDecode from 'jwt-decode';
+// import flowRight from 'lodash/flowRight';
 import * as React from 'react';
+import { withApollo, WithApolloClient } from 'react-apollo';
 
 import history from '../history';
 
-interface ITokenPayload {
+export interface User {
+  email: string;
+  name: string;
+  picture: string;
+  createdAt: string;
+  idHash: string;
+}
+
+interface Token {
   email: string;
   name: string;
   picture: string;
@@ -11,22 +22,30 @@ interface ITokenPayload {
   'https://app.impendulo.org/id_verification': string;
 }
 
-interface IChildrenAuth {
+interface Children {
   authenticated: boolean;
   signIn: () => void;
   signOut: () => void;
+  user?: User;
+  error?: string;
 }
 
-interface IAuth0Props {
+interface AuthProps {
   callback?: boolean;
-  children: (auth: IChildrenAuth) => React.ReactNode;
+  children: (auth: Children) => React.ReactNode;
 }
 
-interface IAuth0State {
-  authenticated: boolean;
+type Props = WithApolloClient<AuthProps>;
+
+interface State {
+  error?: string;
 }
 
-class Auth0 extends React.PureComponent<IAuth0Props, IAuth0State> {
+class Auth0 extends React.Component<Props, State> {
+  static defaultProps: Partial<Props> = {
+    callback: false,
+  };
+
   static auth = new auth0.WebAuth({
     clientID: 'z0s516CNpJGqe0qz9Giz5CLbb0pKoVy4',
     domain: 'impendulo-auth.eu.auth0.com',
@@ -35,40 +54,7 @@ class Auth0 extends React.PureComponent<IAuth0Props, IAuth0State> {
     scope: 'openid profile email',
   });
 
-  static defaultProps: Partial<IAuth0Props> = {
-    callback: false,
-  };
-
-  static runAuthScripts(payload: ITokenPayload) {
-    window.Intercom('boot', {
-      app_id: process.env.REACT_APP_INTERCOM_ID,
-      avatar: {
-        image_url: payload.picture,
-        type: 'avatar',
-      },
-      created_at: new Date(
-        payload['https://app.impendulo.org/created_at'],
-      ).getTime(),
-      email: payload.email,
-      name: payload.name,
-      user_hash: payload['https://app.impendulo.org/id_verification'],
-    });
-  }
-
-  static runDeauthScripts() {
-    window.Intercom('shutdown');
-    window.Intercom('boot', {
-      app_id: process.env.REACT_APP_INTERCOM_ID,
-    });
-  }
-
-  constructor(props: IAuth0Props) {
-    super(props);
-
-    this.state = {
-      authenticated: this.isAuthenticated(),
-    };
-  }
+  state: State = {};
 
   componentDidMount() {
     if (this.props.callback) {
@@ -76,66 +62,95 @@ class Auth0 extends React.PureComponent<IAuth0Props, IAuth0State> {
     }
   }
 
-  storeTokens(accessToken: string, idToken: string, expiresIn: number) {
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('idToken', idToken);
-    localStorage.setItem(
-      'expiresAt',
-      JSON.stringify(expiresIn * 1000 + new Date().getTime()),
-    );
+  tokenToUser({ email, name, picture, ...data }: Token): User {
+    return {
+      createdAt: data['https://app.impendulo.org/created_at'],
+      email,
+      idHash: data['https://app.impendulo.org/id_verification'],
+      name,
+      picture,
+    };
+  }
+
+  getUser(): User | undefined {
+    const idToken = localStorage.getItem('idToken');
+    if (!idToken) {
+      return;
+    }
+
+    return this.tokenToUser(jwtDecode(idToken) as Token);
   }
 
   signIn = () => Auth0.auth.authorize();
 
   signOut = () => {
-    this.setState({ authenticated: false });
-
+    this.props.client.resetStore();
     localStorage.removeItem('accessToken');
     localStorage.removeItem('idToken');
     localStorage.removeItem('expiresAt');
-
-    Auth0.runDeauthScripts();
-
-    history.replace('/auth');
+    Auth0.auth.logout({ returnTo: process.env.REACT_APP_LANDING_URL });
   };
 
   isAuthenticated = () => {
-    const expiresAt = localStorage.getItem('expiresAt');
-    return !!expiresAt && new Date().getTime() < JSON.parse(expiresAt);
+    // tslint:disable-next-line
+    console.log(
+      'hmm',
+      new Date().getTime(),
+      JSON.parse(localStorage.getItem('expiresAt') as string),
+    );
+    return (
+      new Date().getTime() <
+      JSON.parse(localStorage.getItem('expiresAt') as string)
+    );
   };
 
   handleCallback = () => {
-    Auth0.auth.parseHash((err, hash) => {
-      if (
-        err ||
-        !hash ||
-        !hash.expiresIn ||
-        !hash.accessToken ||
-        !hash.idToken
-      ) {
-        // todo: handle this error
-        // tslint:disable-next-line
-        console.error(err, 'invalid session beep boop');
+    this.setState({ error: undefined });
+
+    Auth0.auth.parseHash((err: auth0.Auth0Error, hash) => {
+      if (err || !hash) {
+        this.setState({ error: err.errorDescription || 'No hash found' });
         return;
       }
 
-      this.setState({ authenticated: true });
-      this.storeTokens(hash.accessToken, hash.idToken, hash.expiresIn);
-      Auth0.runAuthScripts(hash.idTokenPayload);
+      const { accessToken, idToken, expiresIn } = hash;
 
+      localStorage.setItem('accessToken', accessToken!);
+      localStorage.setItem('idToken', idToken!);
+      localStorage.setItem(
+        'expiresAt',
+        JSON.stringify(expiresIn! * 1000 + new Date().getTime()),
+      );
+
+      // tslint:disable-next-line
+      console.log(
+        'expiresIn',
+        expiresIn,
+        'at',
+        new Date().getTime(),
+        'calc',
+        expiresIn! * 1000 + new Date().getTime(),
+      );
       history.replace('/');
     });
   };
 
   render() {
-    const { authenticated } = this.state;
+    const { error } = this.state;
 
     return this.props.children({
-      authenticated,
+      authenticated: this.isAuthenticated(),
+      error,
       signIn: this.signIn,
       signOut: this.signOut,
+      user: this.getUser(),
     });
   }
 }
 
-export default Auth0;
+// export default flowRight<Auth0, React.Component, Promise<ExecutionResult>>(
+//   withApollo,
+//   graphql<{}>(AUTH_QUERY),
+// )(Auth0);
+
+export default withApollo(Auth0);

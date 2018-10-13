@@ -23,18 +23,22 @@
     "bulma": "^0.7.2",
     "graphql": "^14.0.2",
     "jwt-decode": "^2.2.0",
+    "lodash": "^4.17.11",
     "node-sass": "^4.9.3",
     "react": "^16.5.2",
     "react-apollo": "^2.2.4",
     "react-dom": "^16.5.2",
     "react-router-dom": "^4.3.1",
-    "react-scripts-ts": "4.0.8"
+    "react-scripts-ts": "4.0.8",
+    "reakit": "^0.15.7",
+    "reakit-theme-default": "^0.1.8"
   },
   "devDependencies": {
     "@types/auth0-js": "^8.11.6",
     "@types/graphql": "^14.0.2",
     "@types/jest": "^23.3.5",
     "@types/jwt-decode": "^2.2.1",
+    "@types/lodash": "^4.14.117",
     "@types/node": "^10.11.7",
     "@types/react": "^16.4.16",
     "@types/react-dom": "^16.0.9",

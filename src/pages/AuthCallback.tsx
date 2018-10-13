@@ -1,14 +1,21 @@
 import * as React from 'react';
+
 import Auth0 from 'src/components/Auth0';
+import Spinner from 'src/components/Spinner';
 
-interface IAuthCallbackProps {}
+interface Props {}
 
-class AuthCallback extends React.PureComponent<IAuthCallbackProps, object> {
+class AuthCallback extends React.PureComponent<Props, object> {
   render() {
     return (
       <Auth0 callback>
-        {() => {
-          return <div>Loading</div>;
+        {({ error }) => {
+          return (
+            <>
+              <Spinner />
+              <div className="notification is-danger">{error}</div>
+            </>
+          );
         }}
       </Auth0>
     );

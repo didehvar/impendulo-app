@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-interface IHomeProps {}
+interface Props {}
 
-class Home extends React.PureComponent<IHomeProps, object> {
+class Home extends React.PureComponent<Props, object> {
   render() {
     return (
       <div>
