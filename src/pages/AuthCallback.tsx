@@ -6,10 +6,8 @@ interface IAuthCallbackProps {}
 class AuthCallback extends React.PureComponent<IAuthCallbackProps, object> {
   render() {
     return (
-      <Auth0>
-        {({ handleAuth }) => {
-          handleAuth();
-
+      <Auth0 callback>
+        {() => {
           return <div>Loading</div>;
         }}
       </Auth0>

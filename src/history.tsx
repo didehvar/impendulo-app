@@ -1,3 +1,9 @@
 import createBrowserHistory from 'history/createBrowserHistory';
 
-export default createBrowserHistory();
+const history = createBrowserHistory();
+
+history.listen(location => {
+  window.Intercom('update');
+});
+
+export default history;

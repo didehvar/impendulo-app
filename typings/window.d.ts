@@ -1,3 +1,3 @@
 interface Window {
-  Intercom: (action: string, options: object) => void;
+  Intercom: (action: string, options?: object) => void;
 }
