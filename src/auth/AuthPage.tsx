@@ -1,21 +1,21 @@
 import * as React from 'react';
 
-import Auth0 from './Auth0';
+import AuthContainer from './AuthContainer';
 
 interface Props {}
 
-class AuthLink extends React.PureComponent<Props, object> {
+class AuthPage extends React.PureComponent<Props, object> {
   render() {
     return (
-      <Auth0>
+      <AuthContainer>
         {({ authenticated, signIn, signOut }) => (
           <a onClick={authenticated ? signOut : signIn}>
             {authenticated ? 'Sign out' : 'Sign in'}
           </a>
         )}
-      </Auth0>
+      </AuthContainer>
     );
   }
 }
 
-export default AuthLink;
+export default AuthPage;

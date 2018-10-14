@@ -1,10 +1,9 @@
 import * as React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import Auth0 from './components/Auth0';
-import Intercom from './components/Intercom';
-import Auth from './pages/Auth';
-import AuthCallback from './pages/AuthCallback';
+import AuthContainer from './auth/AuthContainer';
+import AuthRoutes from './auth/AuthRoutes';
+import Intercom from './external/Intercom';
 import Home from './pages/Home';
 
 class App extends React.Component {
@@ -12,17 +11,15 @@ class App extends React.Component {
     return (
       <Router>
         <>
-          <Auth0>
-            {({ authenticated, user }) => {
-              console.log('appauth0', authenticated, user); // tslint:disable-line
-              return <Intercom authenticated={authenticated} user={user} />;
-            }}
-          </Auth0>
+          <AuthContainer>
+            {({ authenticated, user }) => (
+              <Intercom authenticated={authenticated} user={user} />
+            )}
+          </AuthContainer>
 
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route exact path="/auth" component={Auth} />
-            <Route exact path="/auth/callback" component={AuthCallback} />
+            <AuthRoutes />
           </Switch>
         </>
       </Router>
