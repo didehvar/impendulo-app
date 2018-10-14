@@ -7,6 +7,7 @@ import { Provider, ThemeProvider } from 'reakit';
 
 import darkTheme from './core/theme/dark';
 import lightTheme from './core/theme/light';
+import Theme from './core/theme/Theme';
 import ThemeContainer from './core/theme/ThemeContainer';
 import './index.scss';
 import App from './App';
@@ -23,12 +24,14 @@ const client = new ApolloClient({
   uri: process.env.REACT_APP_HASURA_URL,
 });
 
+console.log(lightTheme);
+
 ReactDOM.render(
   <ApolloProvider client={client}>
     <Provider>
       <ThemeContainer>
         {({ mode }) => (
-          <ThemeProvider theme={mode === 'dark' ? darkTheme : lightTheme}>
+          <ThemeProvider theme={mode === Theme.Dark ? darkTheme : lightTheme}>
             <App />
           </ThemeProvider>
         )}

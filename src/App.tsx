@@ -2,6 +2,7 @@ import * as React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import AuthContainer from './auth/AuthContainer';
+import CoreLayout from './core/layouts/CoreLayout';
 import AuthCallbackPage from './core/pages/AuthCallbackPage';
 import AuthPage from './core/pages/AuthPage';
 import Home from './core/pages/Home';
@@ -18,12 +19,14 @@ class App extends React.Component {
             )}
           </AuthContainer>
 
-          <Switch>
-            <Route exact path="/" component={Home} />
+          <CoreLayout>
+            <Switch>
+              <Route exact path="/" component={Home} />
 
-            <Route exact path="/auth" component={AuthPage} />
-            <Route exact path="/auth/callback" component={AuthCallbackPage} />
-          </Switch>
+              <Route exact path="/auth" component={AuthPage} />
+              <Route exact path="/auth/callback" component={AuthCallbackPage} />
+            </Switch>
+          </CoreLayout>
         </>
       </Router>
     );
