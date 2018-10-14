@@ -1,5 +1,5 @@
 import { ApolloClient } from 'apollo-boost';
-import { WebAuth } from 'auth0-js';
+import { WebAuth, Auth0DecodedHash } from 'auth0-js';
 import * as jwtDecode from 'jwt-decode';
 import User from 'src/core/interfaces/User';
 
@@ -29,23 +29,31 @@ class Auth0 {
 
   parseHash(): Promise<User> {
     return new Promise<User>((resolve, reject) => {
-      this.webAuth.parseHash((err: auth0.Auth0Error, hash) => {
-        if (err || !hash) {
+      this.webAuth.parseHash((err: auth0.Auth0Error, authResult) => {
+        if (err || !authResult) {
           return reject(
             new Error(err ? err.errorDescription : config.defaultError),
           );
         }
 
-        const { accessToken, idToken, idTokenPayload, expiresIn } = hash;
+        return resolve(this.storeResult(authResult));
+      });
+    });
+  }
 
-        this.storeValue(config.keys.accessToken, accessToken!);
-        this.storeValue(config.keys.idToken, idToken!);
-        this.storeValue(
-          config.keys.expiresAt,
-          JSON.stringify(expiresIn! * 1000 + new Date().getTime()),
-        );
+  renewSession(): Promise<User> {
+    console.log('secretly renew');
+    return new Promise((resolve, reject) => {
+      this.webAuth.checkSession({}, (err, authResult) => {
+        if (err || !authResult) {
+          console.log('renew failed', err, authResult);
+          return reject(
+            new Error(err ? err.errorDescription : config.defaultError),
+          );
+        }
 
-        return resolve(this.userInfo(idTokenPayload));
+        console.log('renew success', this.userInfo(authResult.idTokenPayload!));
+        return resolve(this.storeResult(authResult));
       });
     });
   }
@@ -60,8 +68,7 @@ class Auth0 {
     }
 
     const {
-      [config.tokenKeys.createdAt]: createdAt,
-      [config.tokenKeys.intercomHash]: idHash,
+      [config.claimsNamespace]: { createdAt, intercomHash },
       email,
       name,
       picture,
@@ -70,7 +77,7 @@ class Auth0 {
     return {
       createdAt,
       email,
-      idHash,
+      intercomHash,
       name,
       picture,
     };
@@ -83,6 +90,19 @@ class Auth0 {
 
   private getExpiry = () =>
     JSON.parse(localStorage.getItem(config.keys.expiresAt) as string);
+
+  private storeResult = (authResult: Auth0DecodedHash) => {
+    const { accessToken, idToken, idTokenPayload, expiresIn } = authResult;
+
+    this.storeValue(config.keys.accessToken, accessToken!);
+    this.storeValue(config.keys.idToken, idToken!);
+    this.storeValue(
+      config.keys.expiresAt,
+      JSON.stringify(expiresIn! * 1000 + new Date().getTime()),
+    );
+
+    return this.userInfo(idTokenPayload);
+  };
 }
 
 export default Auth0;

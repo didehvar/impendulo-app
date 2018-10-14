@@ -3,5 +3,5 @@ export default interface User {
   name: string;
   picture: string;
   createdAt: string;
-  idHash: string;
+  intercomHash: string;
 }

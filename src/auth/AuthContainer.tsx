@@ -4,13 +4,16 @@ import {
   Container,
   EffectMap,
   OnMount,
+  OnUnmount,
   SelectorMap,
+  SetState,
 } from 'constate';
 import { History } from 'history';
 import * as React from 'react';
 import { withApollo, WithApolloClient } from 'react-apollo';
 import User from 'src/core/interfaces/User';
 
+import config from './config';
 import Auth0 from './Auth0';
 
 const auth = new Auth0();
@@ -20,6 +23,7 @@ interface State {
   history?: History;
   error?: string;
   client: ApolloClient<any>;
+  renewInterval?: NodeJS.Timeout;
 }
 
 interface Selectors {
@@ -42,20 +46,39 @@ const effects: EffectMap<State, Effects> = {
   signOut: () => ({ state }) => auth.signOut(state.client),
 };
 
-const onMount: OnMount<State> = async ({ state: { history }, setState }) => {
-  if (auth.isAuthenticated()) {
-    setState({ user: auth.userInfo() });
+const renewCallback = async (setState: SetState<State>) => {
+  try {
+    const user = await auth.renewSession();
+    setState({ user });
+  } catch (ex) {
+    return setState({ error: ex.message, user: undefined });
   }
+};
 
+const onMount: OnMount<State> = async ({ state: { history }, setState }) => {
   if (history) {
     try {
       const user = await auth.parseHash();
-      setState({ user });
+      const renewInterval = setInterval(() => {
+        console.log('renewCallback');
+        renewCallback(setState);
+      }, config.renewIntervalMs);
+      setState({ user, renewInterval });
       history.replace('/');
     } catch (ex) {
       return setState({ error: ex.message, user: undefined });
     }
+  } else if (auth.isAuthenticated()) {
+    const renewInterval = setInterval(() => {
+      console.log('renewCallback');
+      renewCallback(setState);
+    }, config.renewIntervalMs);
+    setState({ user: auth.userInfo(), renewInterval });
   }
+};
+
+const onUnmount: OnUnmount<State> = ({ state: { renewInterval } }) => {
+  if (renewInterval) clearInterval(renewInterval);
 };
 
 type ContainerProps = (
@@ -71,6 +94,7 @@ const AuthContainer: ContainerProps = props => (
     selectors={selectors}
     effects={effects}
     onMount={onMount}
+    onUnmount={onUnmount}
     initialState={{
       ...props.initialState,
       ...initialState,

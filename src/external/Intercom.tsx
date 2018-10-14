@@ -77,14 +77,14 @@ class Intercom extends React.Component<Props> {
     name,
     picture,
     createdAt,
-    idHash,
+    intercomHash,
   }: User): Partial<IntercomAttributes> {
     return {
       avatar: { type: 'avatar', image_url: picture },
       created_at: createdAt,
       email,
       name,
-      user_hash: idHash,
+      user_hash: intercomHash,
     };
   }
 
