@@ -9,11 +9,11 @@ import JwtToken from './JwtToken';
 
 class Auth0 {
   webAuth = new WebAuth({
-    clientID: 'z0s516CNpJGqe0qz9Giz5CLbb0pKoVy4',
-    domain: 'impendulo-auth.eu.auth0.com',
-    redirectUri: `${process.env.REACT_APP_BASE_URL}/auth/callback`,
-    responseType: 'token id_token',
-    scope: 'openid profile email',
+    clientID: config.clientId,
+    domain: config.domain,
+    redirectUri: config.returnTo,
+    responseType: config.responseType,
+    scope: config.scope,
   });
 
   isAuthenticated = () =>
@@ -27,7 +27,7 @@ class Auth0 {
     this.removeValue(config.keys.accessToken);
     this.removeValue(config.keys.idToken);
     this.removeValue(config.keys.expiresAt);
-    this.webAuth.logout({ returnTo: process.env.REACT_APP_LANDING_URL });
+    this.webAuth.logout({ returnTo: config.logoutReturnTo });
   };
 
   parseHash(): Promise<User> {
@@ -35,7 +35,7 @@ class Auth0 {
       this.webAuth.parseHash((err: auth0.Auth0Error, hash) => {
         if (err || !hash) {
           return reject(
-            new Error(err ? err.errorDescription : 'No hash found'),
+            new Error(err ? err.errorDescription : config.defaultError),
           );
         }
 
@@ -63,8 +63,8 @@ class Auth0 {
     }
 
     const {
-      'https://app.impendulo.org/created_at': createdAt,
-      'https://app.impendulo.org/id_verification': idHash,
+      [config.tokenKeys.createdAt]: createdAt,
+      [config.tokenKeys.intercomHash]: idHash,
       email,
       name,
       picture,
