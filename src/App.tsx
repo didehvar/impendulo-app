@@ -14,8 +14,8 @@ class App extends React.Component {
       <Router>
         <>
           <AuthContainer>
-            {({ authenticated, user }) => (
-              <Intercom authenticated={authenticated} user={user} />
+            {({ isAuthenticated, user }) => (
+              <Intercom authenticated={isAuthenticated()} user={user} />
             )}
           </AuthContainer>
 

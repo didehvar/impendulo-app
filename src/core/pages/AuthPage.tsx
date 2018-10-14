@@ -5,10 +5,10 @@ import AuthContainer from 'src/auth/AuthContainer';
 
 const AuthPage: React.StatelessComponent = () => (
   <AuthContainer>
-    {({ authenticated, signIn, signOut }) => (
+    {({ isAuthenticated, signIn, signOut }) => (
       <>
-        <Button onClick={authenticated ? signOut : signIn}>
-          {authenticated ? 'Sign out' : 'Sign in'}
+        <Button onClick={isAuthenticated() ? signOut : signIn}>
+          {isAuthenticated() ? 'Sign out' : 'Sign in'}
         </Button>
         <Link as={RouterLink} to="/">
           Home

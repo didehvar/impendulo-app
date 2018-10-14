@@ -4,6 +4,7 @@ import {
   Container,
   EffectMap,
   OnMount,
+  SelectorMap,
 } from 'constate';
 import { History } from 'history';
 import * as React from 'react';
@@ -15,11 +16,14 @@ import Auth0 from './Auth0';
 const auth = new Auth0();
 
 interface State {
-  authenticated: boolean;
   user?: User;
   history?: History;
   error?: string;
   client: ApolloClient<any>;
+}
+
+interface Selectors {
+  isAuthenticated: () => boolean;
 }
 
 interface Effects {
@@ -27,8 +31,10 @@ interface Effects {
   signOut: () => void;
 }
 
-const initialState: Partial<State> = {
-  authenticated: false,
+const initialState: Partial<State> = {};
+
+const selectors: SelectorMap<State, Selectors> = {
+  isAuthenticated: () => () => auth.isAuthenticated(),
 };
 
 const effects: EffectMap<State, Effects> = {
@@ -38,22 +44,22 @@ const effects: EffectMap<State, Effects> = {
 
 const onMount: OnMount<State> = async ({ state: { history }, setState }) => {
   if (auth.isAuthenticated()) {
-    setState({ authenticated: true, user: auth.userInfo() });
+    setState({ user: auth.userInfo() });
   }
 
   if (history) {
     try {
       const user = await auth.parseHash();
-      setState({ authenticated: true, user });
+      setState({ user });
       history.replace('/');
     } catch (ex) {
-      return setState({ authenticated: false, error: ex.message });
+      return setState({ error: ex.message, user: undefined });
     }
   }
 };
 
 type ContainerProps = (
-  props: ComposableContainerProps<State, {}, {}, Effects> &
+  props: ComposableContainerProps<State, Selectors, {}, Effects> &
     WithApolloClient<{}>,
 ) => JSX.Element;
 
@@ -62,6 +68,7 @@ const AuthContainer: ContainerProps = props => (
     {...props}
     pure
     context="auth"
+    selectors={selectors}
     effects={effects}
     onMount={onMount}
     initialState={{
