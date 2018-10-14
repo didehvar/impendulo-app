@@ -15,9 +15,7 @@ class Auth0 {
     scope: config.scope,
   });
 
-  isAuthenticated = () =>
-    new Date().getTime() <
-    JSON.parse(localStorage.getItem(config.keys.expiresAt) as string);
+  isAuthenticated = () => new Date().getTime() < this.getExpiry();
 
   signIn = () => this.webAuth.authorize();
 
@@ -82,6 +80,9 @@ class Auth0 {
     localStorage.setItem(key, value);
 
   private removeValue = (key: string) => localStorage.removeItem(key);
+
+  private getExpiry = () =>
+    JSON.parse(localStorage.getItem(config.keys.expiresAt) as string);
 }
 
 export default Auth0;
