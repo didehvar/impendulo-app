@@ -5,12 +5,12 @@ import {
   EffectMap,
   OnMount,
 } from 'constate';
+import { History } from 'history';
 import * as React from 'react';
 import { withApollo, WithApolloClient } from 'react-apollo';
+import User from 'src/core/interfaces/User';
 
-import { History } from 'history';
-import Auth0 from 'src/auth/Auth0';
-import User from 'src/shared/User';
+import Auth0 from './Auth0';
 
 const auth = new Auth0();
 

@@ -5,9 +5,9 @@ export default {
   defaultError: 'No hash found',
   domain: 'impendulo-auth.eu.auth0.com',
   keys: {
-    accessToken: 'auth-accessToken',
-    expiresAt: 'auth-expiresAt',
-    idToken: 'auth-idToken',
+    accessToken: 'auth.accessToken',
+    expiresAt: 'auth.expiresAt',
+    idToken: 'auth.idToken',
   },
   logoutReturnTo: process.env.REACT_APP_LANDING_URL,
   responseType: 'token id_token',

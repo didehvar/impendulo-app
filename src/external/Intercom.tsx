@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
-import User from 'src/shared/User';
+import User from 'src/core/interfaces/User';
 
 import IntercomAttributes from './IntercomAttributes';
 

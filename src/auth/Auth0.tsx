@@ -1,8 +1,7 @@
 import { ApolloClient } from 'apollo-boost';
 import { WebAuth } from 'auth0-js';
 import * as jwtDecode from 'jwt-decode';
-
-import User from '../shared/User';
+import User from 'src/core/interfaces/User';
 
 import config from './config';
 import JwtToken from './JwtToken';

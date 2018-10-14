@@ -2,9 +2,10 @@ import * as React from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import AuthContainer from './auth/AuthContainer';
-import AuthRoutes from './auth/AuthRoutes';
+import AuthCallbackPage from './core/pages/AuthCallbackPage';
+import AuthPage from './core/pages/AuthPage';
+import Home from './core/pages/Home';
 import Intercom from './external/Intercom';
-import Home from './pages/Home';
 
 class App extends React.Component {
   render() {
@@ -19,7 +20,9 @@ class App extends React.Component {
 
           <Switch>
             <Route exact path="/" component={Home} />
-            <AuthRoutes />
+
+            <Route exact path="/auth" component={AuthPage} />
+            <Route exact path="/auth/callback" component={AuthCallbackPage} />
           </Switch>
         </>
       </Router>
