@@ -1,6 +1,6 @@
 interface IIntercom {
   (action: string, options?: object): void;
-  c: (...args: any) => void;
+  c: (...args: any[]) => void;
   q: any[];
 }
 
