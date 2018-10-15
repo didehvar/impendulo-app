@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 import AuthContainer from './auth/AuthContainer';
 import CoreLayout from './core/layouts/CoreLayout';
-import AuthCallbackPage from './core/pages/AuthCallbackPage';
-import AuthPage from './core/pages/AuthPage';
+import Auth from './core/pages/Auth';
+import AuthCallback from './core/pages/AuthCallback';
 import Home from './core/pages/Home';
 import Intercom from './external/Intercom';
 
@@ -23,8 +23,8 @@ class App extends React.Component {
             <Switch>
               <Route exact path="/" component={Home} />
 
-              <Route exact path="/auth" component={AuthPage} />
-              <Route exact path="/auth/callback" component={AuthCallbackPage} />
+              <Route exact path="/auth" component={Auth} />
+              <Route exact path="/auth/callback" component={AuthCallback} />
             </Switch>
           </CoreLayout>
         </>

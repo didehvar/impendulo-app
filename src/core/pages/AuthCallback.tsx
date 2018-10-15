@@ -5,7 +5,7 @@ import Error from 'src/core/elements/Error';
 import Hero from 'src/core/elements/Hero';
 import Spinner from 'src/core/elements/Spinner';
 
-const AuthCallbackPage: React.StatelessComponent<RouteComponentProps> = ({
+const AuthCallback: React.StatelessComponent<RouteComponentProps> = ({
   history,
 }) => (
   <Hero
@@ -22,4 +22,4 @@ const AuthCallbackPage: React.StatelessComponent<RouteComponentProps> = ({
   </Hero>
 );
 
-export default AuthCallbackPage;
+export default AuthCallback;

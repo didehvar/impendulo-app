@@ -1,10 +1,17 @@
 import { ApolloClient } from 'apollo-boost';
-import { WebAuth, Auth0DecodedHash } from 'auth0-js';
+import { Auth0DecodedHash, WebAuth } from 'auth0-js';
 import * as jwtDecode from 'jwt-decode';
 import User from 'src/core/interfaces/User';
 
 import config from './config';
-import JwtToken from './JwtToken';
+
+interface JwtToken {
+  email: string;
+  name: string;
+  picture: string;
+  'https://app.impendulo.org/created_at': string;
+  'https://app.impendulo.org/id_verification': string;
+}
 
 class Auth0 {
   webAuth = new WebAuth({

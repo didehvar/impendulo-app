@@ -46,34 +46,27 @@ const effects: EffectMap<State, Effects> = {
   signOut: () => ({ state }) => auth.signOut(state.client),
 };
 
-const renewCallback = async (setState: SetState<State>) => {
-  try {
-    const user = await auth.renewSession();
-    setState({ user });
-  } catch (ex) {
-    return setState({ error: ex.message, user: undefined });
-  }
-};
+const renewSession = (setState: SetState<State>) =>
+  setInterval(async () => {
+    try {
+      const user = await auth.renewSession();
+      setState({ user });
+    } catch (ex) {
+      return setState({ error: ex.message, user: undefined });
+    }
+  }, config.renewIntervalMs);
 
 const onMount: OnMount<State> = async ({ state: { history }, setState }) => {
   if (history) {
     try {
       const user = await auth.parseHash();
-      const renewInterval = setInterval(() => {
-        console.log('renewCallback');
-        renewCallback(setState);
-      }, config.renewIntervalMs);
-      setState({ user, renewInterval });
+      setState({ user, renewInterval: renewSession(setState) });
       history.replace('/');
     } catch (ex) {
       return setState({ error: ex.message, user: undefined });
     }
   } else if (auth.isAuthenticated()) {
-    const renewInterval = setInterval(() => {
-      console.log('renewCallback');
-      renewCallback(setState);
-    }, config.renewIntervalMs);
-    setState({ user: auth.userInfo(), renewInterval });
+    setState({ user: auth.userInfo(), renewInterval: renewSession(setState) });
   }
 };
 

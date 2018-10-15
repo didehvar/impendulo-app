@@ -2,7 +2,20 @@ import * as React from 'react';
 import { withRouter, RouteComponentProps } from 'react-router';
 import User from 'src/core/interfaces/User';
 
-import IntercomAttributes from './IntercomAttributes';
+interface IntercomAttributes {
+  app_id: string;
+  custom_launcher_selector?: string;
+
+  email?: string;
+  created_at?: string;
+  name?: string;
+  user_hash?: string;
+  avatar?: {
+    type: 'avatar';
+    image_url: string;
+  };
+}
+
 
 interface Props extends RouteComponentProps {
   authenticated: boolean;

@@ -3,7 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Button, Link } from 'reakit';
 import AuthContainer from 'src/auth/AuthContainer';
 
-const AuthPage: React.StatelessComponent = () => (
+const Auth: React.StatelessComponent = () => (
   <AuthContainer>
     {({ isAuthenticated, signIn, signOut }) => (
       <>
@@ -18,4 +18,4 @@ const AuthPage: React.StatelessComponent = () => (
   </AuthContainer>
 );
 
-export default AuthPage;
+export default Auth;

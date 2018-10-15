@@ -7,8 +7,7 @@ import { Provider, ThemeProvider } from 'reakit';
 
 import darkTheme from './core/theme/dark';
 import lightTheme from './core/theme/light';
-import Theme from './core/theme/Theme';
-import ThemeContainer from './core/theme/ThemeContainer';
+import ThemeContainer, { Theme } from './core/theme/ThemeContainer';
 import './index.scss';
 import App from './App';
 

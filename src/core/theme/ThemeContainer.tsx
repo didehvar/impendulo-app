@@ -3,7 +3,11 @@ import * as React from 'react';
 import { Container } from 'reakit';
 
 import config from './config';
-import Theme from './Theme';
+
+export enum Theme {
+  Light = 'light',
+  Dark = 'dark',
+}
 
 interface State {
   mode: Theme;
